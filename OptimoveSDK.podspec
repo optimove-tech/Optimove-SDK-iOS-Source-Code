@@ -10,6 +10,7 @@ Pod::Spec.new do |s|
   s.social_media_url = 'https://twitter.com/Optimove'
   s.platform = 'ios'
   s.ios.deployment_target = '10.0'
+  s.visionos.deployment_target = "1.0"
   # s.static_framework = true
   s.swift_version = '5'
   base_dir = "OptimoveSDK/"
