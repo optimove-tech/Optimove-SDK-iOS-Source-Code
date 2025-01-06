@@ -36,3 +36,7 @@ final class TenantConfigurationDownloader: AsyncOperation {
         }
     }
 }
+
+#if swift(>=5.5)
+extension TenantConfigurationDownloader: @unchecked Sendable {}
+#endif

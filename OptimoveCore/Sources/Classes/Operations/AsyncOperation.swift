@@ -79,6 +79,10 @@ open class AsyncOperation: Operation {
     }
 }
 
+#if swift(>=5.5)
+extension AsyncOperation: @unchecked Sendable {}
+#endif
+
 open class AsyncBlockOperation: AsyncOperation {
     public typealias Closure = (AsyncBlockOperation) -> Void
 
@@ -94,3 +98,7 @@ open class AsyncBlockOperation: AsyncOperation {
         closure(self)
     }
 }
+
+#if swift(>=5.5)
+extension AsyncBlockOperation: @unchecked Sendable {}
+#endif

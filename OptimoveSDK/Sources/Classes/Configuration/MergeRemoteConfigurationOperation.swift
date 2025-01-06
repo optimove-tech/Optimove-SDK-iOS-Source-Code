@@ -29,3 +29,7 @@ final class MergeRemoteConfigurationOperation: AsyncOperation {
         state = .finished
     }
 }
+
+#if swift(>=5.5)
+extension MergeRemoteConfigurationOperation: @unchecked Sendable {}
+#endif

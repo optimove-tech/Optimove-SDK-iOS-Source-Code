@@ -35,3 +35,7 @@ final class GlobalConfigurationDownloader: AsyncOperation {
         }
     }
 }
+
+#if swift(>=5.5)
+extension GlobalConfigurationDownloader: @unchecked Sendable {}
+#endif

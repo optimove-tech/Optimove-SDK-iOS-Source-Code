@@ -65,7 +65,6 @@ public class OptimovePreferenceCenter {
         self.storage = storage
     }
 
-    @available(iOS 13.0, *)
     public func getPreferencesAsync(completion: @escaping PreferencesGetHandler) {
         guard let config = Optimove.getConfig()?.getPreferenceCenterConfig() else {
             Logger.error("Preference center credentials are not set")
@@ -83,37 +82,35 @@ public class OptimovePreferenceCenter {
             return
         }
 
-        Task {
-            do {
-                let request = try createGetPreferencesRequest(for: customerId, with: config)
+        do {
+            let request = try createGetPreferencesRequest(for: customerId, with: config)
 
-                networkClient?.perform(request) { [self] result in
-                    switch result {
-                    case .success(let response):
-                        do {
-                            let preferences = try response.decode(to: OptimovePC.Preferences.self)
-                            DispatchQueue.main.async {
-                                completion(.success, preferences)
-                            }
-                        } catch {
-                            logFailedResponse(error)
-                            DispatchQueue.main.async {
-                                completion(.error, nil)
-                            }
+            networkClient?.perform(request) { [self] result in
+                switch result {
+                case .success(let response):
+                    do {
+                        let preferences = try response.decode(to: OptimovePC.Preferences.self)
+                        DispatchQueue.main.async {
+                            completion(.success, preferences)
                         }
-                    case .failure(let error):
+                    } catch {
                         logFailedResponse(error)
                         DispatchQueue.main.async {
                             completion(.error, nil)
                         }
                     }
+                case .failure(let error):
+                    logFailedResponse(error)
+                    DispatchQueue.main.async {
+                        completion(.error, nil)
+                    }
                 }
+            }
 
-            } catch {
-                logFailedResponse(error)
-                DispatchQueue.main.async {
-                    completion(.error, nil)
-                }
+        } catch {
+            logFailedResponse(error)
+            DispatchQueue.main.async {
+                completion(.error, nil)
             }
         }
     }
@@ -144,8 +141,6 @@ public class OptimovePreferenceCenter {
         return (region, brandGroupId, tenantId)
     }
 
-
-    @available(iOS 13.0, *)
     public func setCustomerPreferencesAsync(completion: @escaping PreferencesSetHandler, updates: [OptimovePC.PreferenceUpdate]) {
         guard let config = Optimove.getConfig()?.getPreferenceCenterConfig() else {
             Logger.error("Preference center credentials are not set")
@@ -162,37 +157,35 @@ public class OptimovePreferenceCenter {
             return
         }
 
-        Task {
-            do {
-                let request = try createSetPreferencesRequest(for: customerId, with: config, updates: updates)
+        do {
+            let request = try createSetPreferencesRequest(for: customerId, with: config, updates: updates)
 
-                networkClient?.perform(request) { [self] result in
-                    switch result {
-                    case .success(let response):
-                        do {
-                            _ = try response.unwrap()
-                            DispatchQueue.main.async {
-                                completion(.success)
-                            }
-                        } catch {
-                            logFailedResponse(error)
-                            DispatchQueue.main.async {
-                                completion(.error)
-                            }
+            networkClient?.perform(request) { [self] result in
+                switch result {
+                case .success(let response):
+                    do {
+                        _ = try response.unwrap()
+                        DispatchQueue.main.async {
+                            completion(.success)
                         }
-                    case .failure(let error):
+                    } catch {
                         logFailedResponse(error)
                         DispatchQueue.main.async {
                             completion(.error)
                         }
                     }
+                case .failure(let error):
+                    logFailedResponse(error)
+                    DispatchQueue.main.async {
+                        completion(.error)
+                    }
                 }
+            }
 
-            } catch {
-                logFailedResponse(error)
-                DispatchQueue.main.async {
-                    completion(.error)
-                }
+        } catch {
+            logFailedResponse(error)
+            DispatchQueue.main.async {
+                completion(.error)
             }
         }
     }

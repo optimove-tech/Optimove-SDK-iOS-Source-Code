@@ -8,11 +8,15 @@ public protocol NetworkClient {
     func perform(_ request: NetworkRequest, _ completion: @escaping NetworkServiceCompletion)
 }
 
-public struct NetworkClientImpl {
+public final class NetworkClientImpl {
     let session: URLSession
 
     public init(configuration: URLSessionConfiguration = URLSessionConfiguration.default) {
         session = URLSession(configuration: configuration)
+    }
+    
+    deinit {
+        session.finishTasksAndInvalidate()
     }
 }
 

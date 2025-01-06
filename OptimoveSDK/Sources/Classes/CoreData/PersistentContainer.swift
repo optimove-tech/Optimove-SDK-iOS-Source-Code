@@ -89,6 +89,10 @@ final class PersistentContainer: NSPersistentContainer {
     }
 }
 
+#if swift(>=5.5)
+extension PersistentContainer: @unchecked Sendable {}
+#endif
+
 extension FileManager {
     func defineStoreURL(folderName: String, storeName: String) throws -> URL {
         let libraryDirectory = try unwrap(urls(for: .libraryDirectory, in: .userDomainMask).first)
